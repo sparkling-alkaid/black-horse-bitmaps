@@ -42,7 +42,6 @@ public class ExprService {
 
     private static final char[] op = {'&', '|', '!', '(', ')'};
     private static final char[] subop = {'+', '-', '>', '<'};
-    //    private static final char[] op = {'&'};
     private static final String[] strOp = {"&", "|", "!", "(", ")", ">", "<", "+", "-"};
 
     private String trim(String expression) {
@@ -91,12 +90,6 @@ public class ExprService {
         return list;
     }
 
-    private void printList(List<String> list) {
-        for (String o : list) {
-            System.out.print(o + " ");
-        }
-    }
-
     private List<String> infixToPostfix(List<String> list) {
         List<String> postfixList = new ArrayList<>();
         Stack<String> stack = new Stack<>();
@@ -109,10 +102,6 @@ public class ExprService {
                     break;
                 case "&":
                 case "|":
-//                case "-":
-//                case "+":
-//                case ">":
-//                case "<":
                     if (!stack.empty()) {
                         while (!(stack.peek().equals("("))) {
                             postfixList.add(stack.pop());
@@ -224,7 +213,6 @@ public class ExprService {
         }
         return rr;
     }
-
 
     @PostConstruct
     public void test() {
