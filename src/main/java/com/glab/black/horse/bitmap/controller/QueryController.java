@@ -24,4 +24,5 @@ public class QueryController {
         return execService.exec(rule);
     }
 
+
 }
