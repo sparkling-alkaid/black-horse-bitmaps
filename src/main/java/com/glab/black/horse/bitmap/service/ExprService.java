@@ -160,13 +160,13 @@ public class ExprService {
                                        byTag = numberBitmapGroup.gt(matchValue);
                                        break;
                                    case '+':
-                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       byTag = numberBitmapGroup.gte(matchValue);
                                        break;
                                    case '<':
-                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       byTag = numberBitmapGroup.lt(matchValue);
                                        break;
                                    case '-':
-                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       byTag = numberBitmapGroup.lte(matchValue);
                                        break;
                                    default:
                                        byTag = null;
