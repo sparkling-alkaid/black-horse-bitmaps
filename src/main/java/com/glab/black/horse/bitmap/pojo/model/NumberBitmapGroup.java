@@ -43,7 +43,26 @@ public class NumberBitmapGroup {
         String fullBinary = Strings.padStart(binary, 32, '0');
         char[] chars = fullBinary.toCharArray();
 
+    }
 
+    public RoaringBitmap gte(int value){
+        return null;
+    }
+
+    public RoaringBitmap gt(int value){
+        return null;
+    }
+
+    public RoaringBitmap lte(int value){
+        return null;
+    }
+
+    public RoaringBitmap lt(int value){
+        return null;
+    }
+
+    public RoaringBitmap eq(int value){
+        return null;
     }
 
 
