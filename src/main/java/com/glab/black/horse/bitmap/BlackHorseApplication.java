@@ -8,6 +8,9 @@ public class BlackHorseApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BlackHorseApplication.class, args);
+
+
+
     }
 
 }
