@@ -77,6 +77,10 @@ public class NumberBitmapGroup {
     }
 
     public RoaringBitmap lte(int value) {
+        RoaringBitmap result = new RoaringBitmap();
+
+        Map<Integer, RoaringBitmap> bitmapResult = new HashMap<>();
+        result.add(1L, 100000000L);
         //int -> binary
         String s = Integer.toBinaryString(value);
         //原始binary的长度
@@ -85,9 +89,20 @@ public class NumberBitmapGroup {
         String binStr = Strings.padStart(s, MIN_LENGTH, PAD_CHAR);
         char[] chars = binStr.toCharArray();
         int loopSize = 32 - firstIndex;
+
+
+        for (int j = 32; j > firstIndex; j--) {
+            result.and(bitmapMap.get(j));
+        }
+        //<= 0010000
+        result.andNot(bitmapMap.get(firstIndex));
+        bitmapResult.put(firstIndex, result);
+
+
         for (int i = 0; i < loopSize; i++) {
             String substring = binStr.substring(0, loopSize);
             substring.toCharArray();
+
 
         }
 
