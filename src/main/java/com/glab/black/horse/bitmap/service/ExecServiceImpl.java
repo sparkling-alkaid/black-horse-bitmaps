@@ -8,7 +8,7 @@ import java.util.List;
 public class ExecServiceImpl implements ExecService {
 
     @Override
-    public List<Long> run(String rule) {
+    public List<Long> exec(String rule) {
 
         return null;
     }

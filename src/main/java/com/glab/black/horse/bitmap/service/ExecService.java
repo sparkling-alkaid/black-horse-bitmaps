@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ExecService {
 
-    List<Long> run(String rule);
+    List<Long> exec(String rule);
 
 }

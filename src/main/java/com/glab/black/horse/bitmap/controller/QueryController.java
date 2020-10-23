@@ -23,7 +23,7 @@ public class QueryController {
     @RequestMapping("/query")
     public List<Long> query(QueryReq req) {
         String rule = req.getRule();
-        return execService.run(rule);
+        return execService.exec(rule);
     }
 
 }
