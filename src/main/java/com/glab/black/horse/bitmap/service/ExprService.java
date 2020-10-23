@@ -8,8 +8,11 @@ import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 
 /**
@@ -146,17 +149,18 @@ public class ExprService {
                 RoaringBitmap byTag = null;
                 try {
                     for (char op : subop) {
-                        String tag = null;
-                        String strValue = null;
-                        int matchValue = 0;
+                        String tag;
+                        String strValue;
+                        int matchValue;
                         if (s.indexOf(op) != -1) {
                             tag = s.substring(0, s.indexOf(op));
-                            strValue = s.substring(s.indexOf(op) + 1, s.length());
+                            strValue = s.substring(s.indexOf(op) + 1);
                             NumberBitmapGroup numberBitmapGroup = bitmapImportService.getBitmapGroupById(tag);
                             if (numberBitmapGroup != null) {
                                 if (strValue.contains(".")) {
-                                    TagMeta one = tagMetaRepo.getOne(tag);
-                                    matchValue = (int) Float.parseFloat(s) * one.getPrecision();
+                                    Optional<TagMeta> byId = tagMetaRepo.findById(tag);
+                                    TagMeta one = byId.orElse(null);
+                                    matchValue = new BigDecimal(strValue).multiply(new BigDecimal(10).pow(one.getPrecision())).intValue();
                                 } else {
                                     matchValue = Integer.parseInt(strValue);
                                 }
@@ -221,9 +225,9 @@ public class ExprService {
         return rr;
     }
 
-    public static void main(String[] args) {
 
-        ExprService exs = new ExprService();
-        exs.exec("prop1<10 && prop2<=20 && prop3>30.5 && prop4>=40.9");
+    @PostConstruct
+    public void test() {
+        exec("prop1<10 && prop2<=12 && prop3>30.5 && prop4>=40.9");
     }
 }
