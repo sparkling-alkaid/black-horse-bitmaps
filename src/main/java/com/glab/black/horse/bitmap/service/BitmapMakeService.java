@@ -45,8 +45,6 @@ public class BitmapMakeService {
             BigDecimal pro4 = new BigDecimal(strings[offset++]);
 
 
-
-
             return null;
         });
 

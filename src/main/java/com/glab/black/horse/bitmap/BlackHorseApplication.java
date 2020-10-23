@@ -10,7 +10,6 @@ public class BlackHorseApplication {
         SpringApplication.run(BlackHorseApplication.class, args);
 
 
-
     }
 
 }

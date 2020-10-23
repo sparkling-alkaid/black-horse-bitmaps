@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Table(name = "tag2bimap")
 public class Tag2Bitmap {
 
-
     @Id
     private String tagId;
     @Id
@@ -25,14 +24,14 @@ public class Tag2Bitmap {
     private byte[] bitmap;
 
 
-    public Tag2Bitmap(Tag2RoaringBitmap tagRb){
+    public Tag2Bitmap(Tag2RoaringBitmap tagRb) {
         tagId = tagRb.getTagId();
         bitIndex = tagRb.getBitIndex();
         bitmap = BitmapUtils.serialize(tagRb.getBitmap());
     }
 
     @Data
-    public static class Tag2BitmapKey{
+    public static class Tag2BitmapKey {
 
         private String tagId;
         private Integer bitIndex;

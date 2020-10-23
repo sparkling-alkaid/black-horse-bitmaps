@@ -19,10 +19,10 @@ public class BitmapUtils {
     }
 
 
-    public static RoaringBitmap deserialize(byte[] arr){
+    public static RoaringBitmap deserialize(byte[] arr) {
         RoaringBitmap rb = new RoaringBitmap();
         try (ByteArrayInputStream bos = new ByteArrayInputStream(arr);
-             DataInputStream dis = new DataInputStream(bos)){
+             DataInputStream dis = new DataInputStream(bos)) {
             rb.deserialize(dis);
         } catch (IOException e) {
             e.printStackTrace();

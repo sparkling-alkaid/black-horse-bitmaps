@@ -2,13 +2,13 @@ package com.glab.black.horse.bitmap.pojo.model;
 
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import lombok.Data;
 import org.roaringbitmap.RoaringBitmap;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class NumberBitmapGroup {
