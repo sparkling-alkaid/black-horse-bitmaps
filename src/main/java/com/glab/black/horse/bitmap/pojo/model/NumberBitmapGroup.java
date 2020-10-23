@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import org.roaringbitmap.RoaringBitmap;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 public class NumberBitmapGroup {
