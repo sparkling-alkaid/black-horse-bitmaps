@@ -1,6 +1,8 @@
-package com.glab.black.horse.bitmap.service ;
+package com.glab.black.horse.bitmap.service;
 
+import com.glab.black.horse.bitmap.pojo.entity.TagMeta;
 import com.glab.black.horse.bitmap.pojo.model.NumberBitmapGroup;
+import com.glab.black.horse.bitmap.repo.TagMetaRepo;
 import com.google.common.base.Stopwatch;
 import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,12 @@ public class ExprService {
     @Autowired
     private BitmapImportService bitmapImportService;
 
+    @Autowired
+    private TagMetaRepo tagMetaRepo;
+
     public int[] exec(String expression) {
         Stopwatch started = Stopwatch.createStarted();
-        List<String> work = work(trim(expression.replace("&&","&").replace(">=","+").replace("<=","-")));
+        List<String> work = work(trim(expression.replace("&&", "&").replace(">=", "+").replace("<=", "-")));
         List<String> strings = infixToPostfix(work);
         RoaringBitmap rr = doCal(strings);
         started.stop();
@@ -33,9 +38,9 @@ public class ExprService {
     }
 
     private static final char[] op = {'&', '|', '!', '(', ')'};
-    private static final char[] subop = {'+','-','>','<'};
-//    private static final char[] op = {'&'};
-    private static final String[] strOp = {"&", "|", "!", "(", ")",">","<","+","-"};
+    private static final char[] subop = {'+', '-', '>', '<'};
+    //    private static final char[] op = {'&'};
+    private static final String[] strOp = {"&", "|", "!", "(", ")", ">", "<", "+", "-"};
 
     private String trim(String expression) {
         return expression.replaceAll(" ", "");
@@ -144,34 +149,35 @@ public class ExprService {
                         String tag = null;
                         String strValue = null;
                         int matchValue = 0;
-                        if(s.indexOf(op) != -1){
-                           tag = s.substring(0, s.indexOf(op));
-                           strValue = s.substring(s.indexOf(op) + 1, s.length());
-                           NumberBitmapGroup numberBitmapGroup =  bitmapImportService.getBitmapGroupById(tag);
-                           if(numberBitmapGroup != null){
-                                if(strValue.contains(".")){
-                                    matchValue = (int) Float.parseFloat(s) * 100;
-                                }else{
+                        if (s.indexOf(op) != -1) {
+                            tag = s.substring(0, s.indexOf(op));
+                            strValue = s.substring(s.indexOf(op) + 1, s.length());
+                            NumberBitmapGroup numberBitmapGroup = bitmapImportService.getBitmapGroupById(tag);
+                            if (numberBitmapGroup != null) {
+                                if (strValue.contains(".")) {
+                                    TagMeta one = tagMetaRepo.getOne(tag);
+                                    matchValue = (int) Float.parseFloat(s) * one.getPrecision();
+                                } else {
                                     matchValue = Integer.parseInt(strValue);
                                 }
                                 switch (op) {
-                                   case '>':
-                                       byTag = numberBitmapGroup.gt(matchValue);
-                                       break;
-                                   case '+':
-                                       byTag = numberBitmapGroup.gte(matchValue);
-                                       break;
-                                   case '<':
-                                       byTag = numberBitmapGroup.lt(matchValue);
-                                       break;
-                                   case '-':
-                                       byTag = numberBitmapGroup.lte(matchValue);
-                                       break;
-                                   default:
-                                       byTag = null;
+                                    case '>':
+                                        byTag = numberBitmapGroup.gt(matchValue);
+                                        break;
+                                    case '+':
+                                        byTag = numberBitmapGroup.gte(matchValue);
+                                        break;
+                                    case '<':
+                                        byTag = numberBitmapGroup.lt(matchValue);
+                                        break;
+                                    case '-':
+                                        byTag = numberBitmapGroup.lte(matchValue);
+                                        break;
+                                    default:
+                                        byTag = null;
 
                                 }
-                           }
+                            }
                         }
                     }
                 } catch (Exception e) {
