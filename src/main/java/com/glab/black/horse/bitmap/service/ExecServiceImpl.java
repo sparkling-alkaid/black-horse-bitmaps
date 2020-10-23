@@ -1,5 +1,6 @@
 package com.glab.black.horse.bitmap.service;
 
+import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,8 @@ public class ExecServiceImpl implements ExecService {
     ExprService exprService;
 
     @Override
-    public int[] exec(String rule) {
-        int[] exec = exprService.exec(rule);
-        return null;
+    public RoaringBitmap exec(String rule) {
+        return exprService.exec(rule);
     }
 
 }

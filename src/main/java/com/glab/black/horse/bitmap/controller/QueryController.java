@@ -4,7 +4,10 @@ import com.glab.black.horse.bitmap.pojo.model.NumberBitmapGroup;
 import com.glab.black.horse.bitmap.service.BitmapImportService;
 import com.glab.black.horse.bitmap.service.ExecService;
 import com.glab.black.horse.bitmap.vo.QueryReq;
+import com.glab.black.horse.bitmap.vo.QueryResp;
 import com.glab.black.horse.bitmap.vo.TestReq;
+import com.google.common.collect.Lists;
+import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class QueryController {
+
+    public static final int LIMIT = 1000;
 
     @Autowired
     ExecService execService;
@@ -28,11 +35,26 @@ public class QueryController {
      * @return
      */
     @RequestMapping("/query")
-    public int[] query(QueryReq req) {
+    public QueryResp query(@RequestBody QueryReq req) {
         String rule = req.getRule();
-        return execService.exec(rule);
+        RoaringBitmap exec = execService.exec(rule);
+        return buildResp(exec);
     }
 
+    private QueryResp buildResp(RoaringBitmap exec) {
+        QueryResp queryResp = new QueryResp();
+        queryResp.setCount(exec.getCardinality());
+        Iterator<Integer> iterator = exec.iterator();
+        List<Integer> hits = Lists.newArrayList();
+        int i = 0;
+        while (iterator.hasNext() && i < LIMIT) {
+            Integer next = iterator.next();
+            hits.add(next);
+            i++;
+        }
+        queryResp.setHits(hits);
+        return queryResp;
+    }
 
 
     @Autowired

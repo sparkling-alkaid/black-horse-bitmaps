@@ -1,7 +1,9 @@
 package com.glab.black.horse.bitmap.service;
 
+import org.roaringbitmap.RoaringBitmap;
+
 public interface ExecService {
 
-    int[] exec(String rule);
+    RoaringBitmap exec(String rule);
 
 }

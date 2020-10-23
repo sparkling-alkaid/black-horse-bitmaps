@@ -3,12 +3,10 @@ package com.glab.black.horse.bitmap.service;
 import com.glab.black.horse.bitmap.pojo.entity.TagMeta;
 import com.glab.black.horse.bitmap.pojo.model.NumberBitmapGroup;
 import com.glab.black.horse.bitmap.repo.TagMetaRepo;
-import com.google.common.base.Stopwatch;
 import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +25,10 @@ public class ExprService {
     @Autowired
     private TagMetaRepo tagMetaRepo;
 
-    public int[] exec(String expression) {
-        Stopwatch started = Stopwatch.createStarted();
+    public RoaringBitmap exec(String expression) {
         List<String> work = work(trim(expression.replace("&&", "&").replace(">=", "+").replace("<=", "-")));
         List<String> strings = infixToPostfix(work);
-        RoaringBitmap rr = doCal(strings);
-        started.stop();
-        //System.out.println("expression:[" + expression + "];rr size:" + RamUsageEstimator.humanSizeOf(rr) + ";user count:" + rr.getLongCardinality() + ";time spent:" + started);
-        if (rr.getLongCardinality() >= 100_0000) {
-            return null;
-        }
-        return rr.toArray();
+        return doCal(strings);
     }
 
     private static final char[] op = {'&', '|', '!', '(', ')'};
@@ -214,8 +205,8 @@ public class ExprService {
         return rr;
     }
 
-    @PostConstruct
-    public void test() {
-        exec("prop1<10 && prop2<=12 && prop3>30.5 && prop4>=40.9");
-    }
+//    @PostConstruct
+//    public void test() {
+//        exec("prop1<10 && prop2<=12 && prop3>30.5 && prop4>=40.9");
+//    }
 }
