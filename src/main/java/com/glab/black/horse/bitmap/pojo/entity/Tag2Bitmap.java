@@ -6,14 +6,17 @@ import com.glab.black.horse.bitmap.utils.BitmapUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
+@Entity
 @IdClass(Tag2Bitmap.Tag2BitmapKey.class)
-@Table(name = "tag2bimap")
+@Table(name = "tag2bitmap")
 public class Tag2Bitmap {
 
     @Id
@@ -31,7 +34,7 @@ public class Tag2Bitmap {
     }
 
     @Data
-    public static class Tag2BitmapKey {
+    public static class Tag2BitmapKey implements Serializable {
 
         private String tagId;
         private Integer bitIndex;

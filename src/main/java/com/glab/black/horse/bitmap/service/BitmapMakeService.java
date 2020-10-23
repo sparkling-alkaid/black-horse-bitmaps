@@ -4,9 +4,11 @@ package com.glab.black.horse.bitmap.service;
 import com.glab.black.horse.bitmap.pojo.entity.TagMeta;
 import com.glab.black.horse.bitmap.pojo.model.NumberBitmapGroup;
 import com.glab.black.horse.bitmap.pojo.model.Tag2RoaringBitmap;
+import com.glab.black.horse.bitmap.repo.TagMetaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -22,7 +24,19 @@ public class BitmapMakeService {
     @Autowired
     private BitmapImportService bitmapImportService;
 
-    String dataFile = "";
+    @Autowired
+    private TagMetaRepo tagMetaRepo;
+
+
+//    @PostConstruct
+    public void init(){
+        String filePath="/Users/ranwd/Desktop/shupan1.txt";
+        try {
+            makeBitmap(filePath, tagMetaRepo.findAll());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public void makeBitmap(String filePath, List<TagMeta> metaList) throws IOException {
@@ -63,7 +77,7 @@ public class BitmapMakeService {
         });
         List<Tag2RoaringBitmap> list = numberBitmapGroups.stream().flatMap(numberBitmapGroup -> numberBitmapGroup.toBitmapList().stream()).collect(Collectors.toList());
 
-        bitmapImportService.importTag2Bitmap(list);
+        //bitmapImportService.importTag2Bitmap(list);
 
     }
 

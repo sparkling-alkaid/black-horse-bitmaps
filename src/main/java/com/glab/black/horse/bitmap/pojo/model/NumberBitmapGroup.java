@@ -7,7 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.roaringbitmap.RoaringBitmap;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class NumberBitmapGroup {
@@ -39,6 +43,7 @@ public class NumberBitmapGroup {
         this.name = name;
         this.notNullBitmap = notNullBitmap;
         this.bitmapMap = bitmapMap;
+        this.size = bitmapMap.size();
     }
 
     public RoaringBitmap getBitmapAtIndex(int index) {
@@ -57,15 +62,36 @@ public class NumberBitmapGroup {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         NumberBitmapGroup test = new NumberBitmapGroup("test");
-        for (int i = 1; i < 100000; i++) {
-            if(i==200 || i==100){
-                continue;
+//        for (int i = 1; i < 100000; i++) {
+//            if(i==200 || i==100){
+//                continue;
+//            }
+//            test.addNumber(i+1, i);
+//        }
+
+        String filePath="/Users/ranwd/Desktop/shupan1.txt";
+
+        File dataFile = new File(filePath);
+        Files.lines(dataFile.toPath()).forEach(line -> {
+
+
+            if ("".equals(line)) {
+                return;
             }
-            test.addNumber(i, i);
-        }
-        System.out.println(test.lt(345));
+            String[] strings = line.split(",", -1);
+
+
+            int id = Integer.parseInt(strings[0].trim());
+
+            int value = Integer.parseInt(strings[1].trim());
+            test.addNumber(id, value);
+
+        });
+        System.out.println(test.getBitmapAtIndex(0));
+
+//        System.out.println(test.lt(1000));
     }
 
     private char[] intValToCharArr(int value) {
@@ -225,6 +251,27 @@ public class NumberBitmapGroup {
         list.add(new Tag2RoaringBitmap(name, -1, notNullBitmap));
         bitmapMap.forEach((k, v) -> list.add(new Tag2RoaringBitmap(name, k, v)));
         return list;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NumberBitmapGroup that = (NumberBitmapGroup) o;
+        for(int i=0;i<32;i++){
+            RoaringBitmap source = getBitmapAtIndex(i);
+            RoaringBitmap target = that.getBitmapAtIndex(i);
+            boolean equals = Arrays.equals(source.toArray(), target.toArray());
+            if(!equals){
+                return false;
+            };
+//
+//            if(!getBitmapAtIndex(i).equals(that.getBitmapAtIndex(i))){
+//
+//                return false;
+//            }
+        }
+        return Arrays.equals(notNullBitmap.toArray(), that.notNullBitmap.toArray());
     }
 
 
