@@ -13,10 +13,13 @@ import java.util.Map;
 @Data
 public class NumberBitmapGroup {
 
+    public static final int MIN_LENGTH = 32;
+    public static final char PAD_CHAR = '0';
     private String name;
 
     private RoaringBitmap notNullBitmap;
 
+    //0是低位
     private Map<Integer, RoaringBitmap> bitmapMap;
 
 
@@ -74,12 +77,26 @@ public class NumberBitmapGroup {
     }
 
     public RoaringBitmap lte(int value) {
+        //int -> binary
+        String s = Integer.toBinaryString(value);
+        //原始binary的长度
+        int firstIndex = s.length();
+
+        String binStr = Strings.padStart(s, MIN_LENGTH, PAD_CHAR);
+        char[] chars = binStr.toCharArray();
+        int loopSize = 32 - firstIndex;
+        for (int i = 0; i < loopSize; i++) {
+            String substring = binStr.substring(0, loopSize);
+            substring.toCharArray();
+
+        }
 
         return null;
     }
 
     public RoaringBitmap lt(int value) {
         RoaringBitmap ret = new RoaringBitmap();
+
         return null;
     }
 

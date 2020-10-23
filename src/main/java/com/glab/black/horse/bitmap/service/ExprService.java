@@ -19,7 +19,6 @@ public class ExprService {
     @Autowired
     private BitmapImportService bitmapImportService;
 
-
     public int[] exec(String expression) {
         Stopwatch started = Stopwatch.createStarted();
         List<String> work = work(trim(expression.replace("&&","&").replace(">=","+").replace("<=","-")));

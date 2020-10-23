@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class QueryController {
 
@@ -21,7 +19,7 @@ public class QueryController {
      * @return
      */
     @RequestMapping("/query")
-    public List<Long> query(QueryReq req) {
+    public int[] query(QueryReq req) {
         String rule = req.getRule();
         return execService.exec(rule);
     }
