@@ -1,7 +1,9 @@
-package com.glab.bitmap.service;
+package com.glab.black.horse.bitmap.service ;
 
+import com.glab.black.horse.bitmap.pojo.model.NumberBitmapGroup;
 import com.google.common.base.Stopwatch;
 import org.roaringbitmap.RoaringBitmap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,10 +16,13 @@ import java.util.Stack;
 @Component
 public class ExprService {
 
+    @Autowired
+    private BitmapImportService bitmapImportService;
+
 
     public int[] exec(String expression) {
         Stopwatch started = Stopwatch.createStarted();
-        List<String> work = work(trim(expression));
+        List<String> work = work(trim(expression.replace("&&","&").replace(">=","+").replace("<=","-")));
         List<String> strings = infixToPostfix(work);
         RoaringBitmap rr = doCal(strings);
         started.stop();
@@ -29,7 +34,9 @@ public class ExprService {
     }
 
     private static final char[] op = {'&', '|', '!', '(', ')'};
-    private static final String[] strOp = {"&", "|", "!", "(", ")"};
+    private static final char[] subop = {'+','-','>','<'};
+//    private static final char[] op = {'&'};
+    private static final String[] strOp = {"&", "|", "!", "(", ")",">","<","+","-"};
 
     private String trim(String expression) {
         return expression.replaceAll(" ", "");
@@ -95,6 +102,10 @@ public class ExprService {
                     break;
                 case "&":
                 case "|":
+//                case "-":
+//                case "+":
+//                case ">":
+//                case "<":
                     if (!stack.empty()) {
                         while (!(stack.peek().equals("("))) {
                             postfixList.add(stack.pop());
@@ -130,12 +141,43 @@ public class ExprService {
             if (!isOp(s)) {
                 RoaringBitmap byTag = null;
                 try {
-                    //TODO
-                    byTag = null;
+                    for (char op : subop) {
+                        String tag = null;
+                        String strValue = null;
+                        int matchValue = 0;
+                        if(s.indexOf(op) != -1){
+                           tag = s.substring(0, s.indexOf(op));
+                           strValue = s.substring(s.indexOf(op) + 1, s.length());
+                           NumberBitmapGroup numberBitmapGroup =  bitmapImportService.getBitmapGroupById(tag);
+                           if(numberBitmapGroup != null){
+                                if(strValue.contains(".")){
+                                    matchValue = (int) Float.parseFloat(s) * 100;
+                                }else{
+                                    matchValue = Integer.parseInt(strValue);
+                                }
+                                switch (op) {
+                                   case '>':
+                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       break;
+                                   case '+':
+                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       break;
+                                   case '<':
+                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       break;
+                                   case '-':
+                                       byTag = numberBitmapGroup.gt(matchValue);
+                                       break;
+                                   default:
+                                       byTag = null;
+
+                                }
+                           }
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                RoaringBitmap byTag = getByTag(s);
                 stack.push(byTag);
             } else {
                 switch (s) {
@@ -172,5 +214,11 @@ public class ExprService {
             rr.add(i);
         }
         return rr;
+    }
+
+    public static void main(String[] args) {
+
+        ExprService exs = new ExprService();
+        exs.exec("prop1<10 && prop2<=20 && prop3>30.5 && prop4>=40.9");
     }
 }
