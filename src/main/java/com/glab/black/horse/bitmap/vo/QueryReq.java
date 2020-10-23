@@ -1,4 +1,4 @@
-package com.glab.black.horse.bitmap.entity;
+package com.glab.black.horse.bitmap.vo;
 
 import lombok.Data;
 
