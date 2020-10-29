@@ -9,6 +9,7 @@ import com.glab.black.horse.bitmap.vo.TestReq;
 import com.google.common.collect.Lists;
 import org.roaringbitmap.RoaringBitmap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,9 @@ import java.util.Map;
 @RestController
 public class QueryController {
 
-    public static final int LIMIT = 1000;
+
+    @Value("${calc.result.limit:100}")
+    private Integer limit;
 
     @Autowired
     ExecService execService;
@@ -47,7 +50,7 @@ public class QueryController {
         Iterator<Integer> iterator = exec.iterator();
         List<Integer> hits = Lists.newArrayList();
         int i = 0;
-        while (iterator.hasNext() && i < LIMIT) {
+        while (iterator.hasNext() && i < limit) {
             Integer next = iterator.next();
             hits.add(next);
             i++;

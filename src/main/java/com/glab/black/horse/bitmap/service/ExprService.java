@@ -137,13 +137,9 @@ public class ExprService {
                             strValue = s.substring(s.indexOf(op) + 1);
                             NumberBitmapGroup numberBitmapGroup = bitmapImportService.getBitmapGroupById(tag);
                             if (numberBitmapGroup != null) {
-                                if (strValue.contains(".")) {
                                     Optional<TagMeta> byId = tagMetaRepo.findById(tag);
                                     TagMeta one = byId.orElse(null);
                                     matchValue = new BigDecimal(strValue).multiply(new BigDecimal(10).pow(one.getPrecision())).intValue();
-                                } else {
-                                    matchValue = Integer.parseInt(strValue);
-                                }
                                 switch (op) {
                                     case '>':
                                         byTag = numberBitmapGroup.gt(matchValue);
